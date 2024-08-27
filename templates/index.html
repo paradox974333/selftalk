@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hindu Mythology Chatbot</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #ff9933;
+            --secondary-color: #138808;
+            --background-color: #f0f0f0;
+            --text-color: #333;
+            --chat-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .chat-container {
+            width: 80%;
+            max-width: 800px;
+            background-color: var(--chat-bg);
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .chat-messages {
+            height: 400px;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            border-radius: 20px;
+            max-width: 80%;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .bot-1 {
+            background-color: #e6f3ff;
+            align-self: flex-start;
+        }
+
+        .bot-2 {
+            background-color: #fff0e6;
+            align-self: flex-end;
+            margin-left: auto;
+        }
+
+        .bot-icon {
+            width: 30px;
+            height: 30px;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 10px;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            Random - Endless Conversation
+        </div>
+        <div class="chat-messages" id="chat-messages"></div>
+    </div>
+
+    <script>
+        const chatMessages = document.getElementById('chat-messages');
+
+        function addMessage(message, isBot1) {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message', isBot1 ? 'bot-1' : 'bot-2');
+            
+            const iconElement = document.createElement('span');
+            iconElement.classList.add('bot-icon');
+            iconElement.innerHTML = isBot1 ? '<i class="fas fa-robot"></i>' : '<i class="fas fa-android"></i>';
+            
+            messageElement.appendChild(iconElement);
+            messageElement.appendChild(document.createTextNode(message));
+            
+            chatMessages.appendChild(messageElement);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        async function fetchNewMessages() {
+            try {
+                const response = await fetch('/api/chat');
+                const data = await response.json();
+                data.forEach((msg) => {
+                    addMessage(msg.message, msg.chatbot === "Bot 1");
+                });
+            } catch (error) {
+                console.error('Error fetching new messages:', error);
+            }
+        }
+
+        // Fetch new messages every 5 seconds
+        setInterval(fetchNewMessages, 5000);
+
+        // Initial fetch
+        fetchNewMessages();
+    </script>
+</body>
+</html>
