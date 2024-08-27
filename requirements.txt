@@ -1,5 +1,6 @@
 Flask==2.3.3
 Flask-Cors==4.0.1
 transformers==4.32.0
-torch==2.0.1  # Required for transformers
-gunicorn==20.1.0  # WSGI HTTP Server for UNIX
+torch==2.0.1
+numpy==1.24.4
+gunicorn==20.1.0
